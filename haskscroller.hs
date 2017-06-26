@@ -36,8 +36,8 @@ calibrate = do
 ---------- Splash screen
 
 splash = do
-  let x = map (drawOver gCanvas) (take 14 animLogoTrace)
-  
+  let frames = map ((drawOver gCanvas) . (:[])) (take 14 animLogoTrace)
+  forM_ frames ((tdo mspf) . drawAnim)
   return ()
 
 drawAnim objLogo = do
