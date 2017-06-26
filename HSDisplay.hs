@@ -3,25 +3,31 @@ module HSDisplay where
 import HSString
 import HSTypes
 
-type Border = (Char, Char, Char)
-lineBorder = ('|', '+', '-')
+type Side = Char
+type Corner = Char
+type Border = (Side, (Corner, Corner, Corner, Corner), Side)
+lineBorder = ('║', ('╔', '╗', '╚', '╝'), '═')
+
+render :: Object -> IO()
+render (_, _, img) = do
+    mapM_ putStrLn (border lineBorder img)
+    return ()
+
 
 -- Borders
 
-border :: Dimensions -> Border -> [String] -> [String]
-border (width, height) (side, corner, top) ls
-  = [hb] ++ (map (vborder side) visls) ++ [hb]
+border :: Border -> Image -> Image
+border (side, (ctl, ctr, cbl, cbr), top) img
+  = [hbt] ++ (map (vborder side) img) ++ [hbb]
   where
-    hb = hborder (corner, top) width
-    visls = (take height ls) ++ blanks
-    blanks = replicate vpadheight (padblank width)
-    vpadheight = (height - (length ls))
+    hbt = hborder (ctl, ctr, top) width
+    hbb = hborder (cbl, cbr, top) width
+    width = (length (head img))
 
-hborder :: (Char, Char) -> Width -> String
-hborder (corner, top) width
-  = [corner] ++ (pad width "" top) ++ [corner]
+hborder :: (Corner, Corner, Side) -> Width -> String
+hborder (lcorner, rcorner, top) width
+  = [lcorner] ++ (replicate width top) ++ [rcorner]
 
-vborder :: Char -> String -> String
-vborder _ [] = []
+vborder :: Side -> String -> String
 vborder side txt
   = [side] ++ txt ++ [side]

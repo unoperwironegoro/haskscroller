@@ -1,39 +1,47 @@
-import Data.String
-import Data.List
 import HSString
 import HSDisplay
 import HSObjects
+import HSText
+import HSSprites
+import HSIO
+
+import Data.String
+import Data.List
+import Control.Monad
+
+--------- Game config
+
+gdim@(gwidth, gheight) = (80, 30)
+gCanvas = blankCanvas gdim
+fps = 15
+mspf = (1000 / fps) :: Rational
+
+--------- Game Flow & Logic
 
 main = do
     calibrate
+    splash
     return ()
 
---------- Game config
-gwidth = 80
-gheight = 30
+---------- Calibration
 
----------- Intro
-
-txtPrompt = "Welcome to Haskscroller! Before we begin our quest, please adjust the terminal size until this box is all that you can see, and press Enter to continue."
-
-txtLogo = "\n\n\n\n\n\
-\ __  __    ______\n\
-\/ | | |   / ____|\n\
-\|_|_|_|  |_/____ \n\
-\(_____() (_____()\n\
-\| | | |   ____/ |\n\
-\|_| |_/  |_____/ "
+objPrompt = toObject (txtformat (gwidth - 6) txtPrompt) (3,3)
+objLogo = toObject (artformat 60 spriteLogo) (5,12)
 
 calibrate = do
-    sequence (map putStrLn (border (gwidth, gheight) lineBorder ((txtformat gwidth txtPrompt) ++ (artformat gwidth txtLogo))))
+    render (drawOver gCanvas [objPrompt, objLogo])
     ready <- getLine
     return ()
 
+---------- Splash screen
 
----------- Text Helpers
+splash = do
+  let x = map (drawOver gCanvas) (take 14 animLogoTrace)
+  
+  return ()
 
-section :: [a] -> Int -> [[a]]
-section xs n
-  = (xsfirst) : (section xsrem n)
-  where
-    (xsfirst, xsrem) = splitAt n xs
+drawAnim objLogo = do
+  render (drawOver gCanvas [objLogo])
+  return ()
+
+animLogoTrace = iterate ((flip move) (2, 1)) objLogo

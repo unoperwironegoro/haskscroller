@@ -2,19 +2,19 @@ module HSString where
 
 import HSTypes
 
--- String Formatting
+repeatstr :: String -> String
+repeatstr str = [1..] >> str
 
-pad :: Width -> String -> Char -> String
-pad width txt ch
-  = take width (txt ++ (repeat ch))
-padspace width txt
-  = pad width txt ' '
-padblank width
-  = pad width "" ' '
+padspace :: Width -> String -> String
+padspace w str = take w (str ++ (repeat ' '))
+
+------------------- Art
 
 artformat :: Width -> String -> [String]
 artformat width txt
   = map (padspace width) (lines txt)
+
+------------------- Text wrapping
 
 txtformat :: Width -> String -> [String]
 txtformat width txt
