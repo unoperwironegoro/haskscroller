@@ -8,12 +8,24 @@ type Corner = Char
 type Border = (Side, (Corner, Corner, Corner, Corner), Side)
 lineBorder = ('║', ('╔', '╗', '╚', '╝'), '═')
 
+--"\x1b[32m"
+
+-- Terminal output
+
 render :: Object -> IO()
 render (_, _, img)
   = do
     mapM_ putStrLn (border lineBorder img)
     return ()
 
+wipe n
+  = putStr ("\ESC[" ++ (show n) ++ "A")
+
+hideCursor
+  = putStr "\ESC[?25l"
+
+showCursor
+  = putStr "\ESC[?25h"
 
 -- Borders
 

@@ -16,16 +16,18 @@ import Data.Time.Clock
 
 gdim@(gwidth, gheight) = (80, 30)
 gCanvas = blankCanvas gdim
-fps = 15
+fps = 30
 mspf = (1000 / fps) :: Rational
 
 --------- Game Flow & Logic
 
 main
   = do
+    installHandlers
     calibrate
     tloop mspf 50 renderSplash splash objLogo
     gameloop
+    showCursor
     return ()
 
 gameloop
@@ -40,6 +42,7 @@ tloop tms cycles output effector world
 
 tloop' tms cycles output effector world t
   = do
+    wipe (gheight + 3) -- 2 + 1 (border, input line)
     output world
     let cycles' = cycles - 1
         world' = effector world
@@ -63,14 +66,16 @@ calibrate
   = do
     render (drawOver gCanvas [objPrompt, objLogo])
     ready <- getLine
+    hideCursor
     return ()
 
 ---------- Splash screen
 
 splash :: Object -> Object
 splash
-  = (flip move) (0, 0.8)
+  = (flip move) (0, 0.6)
 
-renderSplash :: Object -> IO()
-renderSplash
-  = render . (drawOver gCanvas) . (:[])
+renderSplash obj
+  = do
+    render (drawOver gCanvas [obj])
+    return ()

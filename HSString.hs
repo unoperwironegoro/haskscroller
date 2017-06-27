@@ -16,12 +16,19 @@ artformat width txt
 
 ------------------- Text wrapping
 
+-- TODO handle empty newlines
 txtformat :: Width -> String -> [String]
 txtformat width txt
   = map (padspace width) ls
   where
     paragraphs = lines txt
-    ls = concatMap (overflow width) (map words paragraphs)
+    ls = concatMap (overflow width) (map emptytospace wordsList)
+    wordsList = (map words paragraphs)
+
+--TODO personal codes
+emptytospace :: [String] -> [String]
+emptytospace [] = [""]
+emptytospace ws = ws
 
 -- Assume no word with length > gwidth
 overflow :: Int -> [String] -> [String]
