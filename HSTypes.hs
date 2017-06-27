@@ -4,8 +4,8 @@ type Height = Int
 type Width = Int
 type Dimensions = (Width, Height)
 
-type X = Int
-type Y = Int
+type X = Float
+type Y = Float
 type Coords = (X, Y)
 
 type Image = [String]

@@ -9,7 +9,8 @@ type Border = (Side, (Corner, Corner, Corner, Corner), Side)
 lineBorder = ('║', ('╔', '╗', '╚', '╝'), '═')
 
 render :: Object -> IO()
-render (_, _, img) = do
+render (_, _, img)
+  = do
     mapM_ putStrLn (border lineBorder img)
     return ()
 

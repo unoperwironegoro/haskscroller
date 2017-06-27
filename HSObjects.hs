@@ -20,9 +20,11 @@ drawOver canvas [] = canvas
 drawOver (coords, (mw, mh), base) (((x,y), (w, h), img):objs)
   = drawOver (coords, (mw, mh), canvas') objs
   where
-    canvas' = drawOver' y h mh canvas'' base
-    canvas'' = zipWith (drawOver' x w mw) img drawnRows
-    drawnRows = take h (drop y base)
+    canvas' = drawOver' y' h mh canvas'' base
+    canvas'' = zipWith (drawOver' x' w mw) img drawnRows
+    drawnRows = take h (drop y' base)
+    x' = round x
+    y' = round y
 
 drawOver' :: Int -> Int -> Int -> [a] -> [a] -> [a]
 drawOver' offset n maxsize mask base
