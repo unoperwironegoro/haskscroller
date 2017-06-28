@@ -1,7 +1,7 @@
-module HSObjects where
+module HSCIIEngine.Objects where
 
-import HSString
-import HSTypes
+import HSCIIEngine.String
+import HSCIIEngine.Types
 
 toObject :: [String] -> Coords -> Object
 toObject img coords
@@ -11,9 +11,12 @@ toObject img coords
     width = length (head img)
     height = length img
 
-move :: Object -> Coords -> Object
-move ((x, y), dim, img) (dx, dy)
-  = ((x + dx, y + dy), dim, img)
+move :: Float -> Object -> Coords -> Object
+move scale ((x, y), dim, img) (dx, dy)
+  = ((x + dx', y + dy'), dim, img)
+  where
+    dx' = dx / scale
+    dy' = dy / scale
 
 drawOver :: Object -> [Object] -> Object
 drawOver canvas [] = canvas

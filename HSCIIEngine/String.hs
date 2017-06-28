@@ -1,6 +1,6 @@
-module HSString where
+module HSCIIEngine.String where
 
-import HSTypes
+import HSCIIEngine.Types
 
 repeatstr :: String -> String
 repeatstr str = [1..] >> str
@@ -14,7 +14,7 @@ artformat :: Width -> String -> [String]
 artformat width txt
   = map (padspace width) (lines txt)
 
-------------------- Text wrapping
+------------------- Text handling
 
 -- TODO handle empty newlines
 txtformat :: Width -> String -> [String]

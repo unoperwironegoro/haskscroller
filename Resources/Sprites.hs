@@ -1,4 +1,4 @@
-module HSSprites where
+module Resources.Sprites where
 
 spriteLogo = "\
 \ __  __    ______\n\

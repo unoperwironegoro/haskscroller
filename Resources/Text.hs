@@ -1,0 +1,1 @@
+module Resources.Text where

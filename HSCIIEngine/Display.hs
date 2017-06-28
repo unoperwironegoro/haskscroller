@@ -1,7 +1,7 @@
-module HSDisplay where
+module HSCIIEngine.Display where
 
-import HSString
-import HSTypes
+import HSCIIEngine.String
+import HSCIIEngine.Types
 
 type Side = Char
 type Corner = Char
@@ -13,9 +13,12 @@ lineBorder = ('║', ('╔', '╗', '╚', '╝'), '═')
 -- Terminal output
 
 render :: Object -> IO()
-render (_, _, img)
+render = (flip renderWithBorder) lineBorder
+
+renderWithBorder :: Object -> Border -> IO()
+renderWithBorder (_, _, img) customBorder
   = do
-    mapM_ putStrLn (border lineBorder img)
+    mapM_ putStrLn (border customBorder img)
     return ()
 
 wipe n

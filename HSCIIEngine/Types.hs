@@ -1,4 +1,4 @@
-module HSTypes where
+module HSCIIEngine.Types where
 
 type Height = Int
 type Width = Int
