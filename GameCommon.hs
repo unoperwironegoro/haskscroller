@@ -3,7 +3,6 @@ module GameCommon where
 import HSCIIEngine.Display
 import HSCIIEngine.Types
 import HSCIIEngine.Objects
-import HSCIIEngine.String
 
 import Resources.Sprites
 
@@ -13,4 +12,4 @@ mspf = (1000 / (realToFrac fps)) :: Rational
 
 gCanvas = blankCanvas gdim
 
-objLogo = toObject (artformat 60 spriteLogo) (40,3)
+objLogo = toObject imgLogo (40,3)

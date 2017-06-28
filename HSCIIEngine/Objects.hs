@@ -3,6 +3,8 @@ module HSCIIEngine.Objects where
 import HSCIIEngine.String
 import HSCIIEngine.Types
 
+import Data.List
+
 toObject :: [String] -> Coords -> Object
 toObject img coords
   = (coords, dim, img)
@@ -23,18 +25,33 @@ drawOver canvas [] = canvas
 drawOver (coords, (mw, mh), base) (((x,y), (w, h), img):objs)
   = drawOver (coords, (mw, mh), canvas') objs
   where
-    canvas' = drawOver' y' h mh canvas'' base
-    canvas'' = zipWith (drawOver' x' w mw) img drawnRows
-    drawnRows = take h (drop y' base)
     x' = round x
     y' = round y
+    -- Split the canvas, making a burger around the drawn rows
+    (top, midrow, bottom) = splitAt2 y' h base
+    canvas' = reassemble mh top burger bottom
+    -- Split the burger, making another burger around columns
+    burger' = map (splitAt2 x' w) midrow
+    burger = zipWith draw burger' img
 
-drawOver' :: Int -> Int -> Int -> [a] -> [a] -> [a]
-drawOver' offset n maxsize mask base
-  = take maxsize (pre ++ mask ++ post)
-  where
-    pre = take offset base
-    post = drop (n + offset) base
+    draw (left, mid, right) row
+      = reassemble mw left mid' right
+      where
+        mid' = zipWith drawTransp mid row
+        drawTransp b i | i == alphaChar = b
+                       | otherwise      = i
+
+    reassemble :: Int -> [a] -> [a] -> [a] -> [a]
+    reassemble maxsize pre mid post
+      = take maxsize (pre ++ mid ++ post)
+
+    splitAt2 :: Int -> Int -> [a] -> ([a], [a], [a])
+    splitAt2 offset len list
+      = (pre, middle, post)
+      where
+        (pre, rest) = splitAt offset list
+        (middle, post) = splitAt len rest
+
 
 canvasObject :: Dimensions -> String -> Object
 canvasObject (width, height) pattern

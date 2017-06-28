@@ -2,17 +2,31 @@ module HSCIIEngine.String where
 
 import HSCIIEngine.Types
 
+import Data.Char
+
+-- Used to represent transparency
+alphaChar = chr 30 :: Char
+
 repeatstr :: String -> String
 repeatstr str = [1..] >> str
 
+pad :: Char -> Width -> String -> String
+pad ch w str = take w (str ++ (repeat ch))
+
 padspace :: Width -> String -> String
-padspace w str = take w (str ++ (repeat ' '))
+padspace = pad ' '
+
+padalpha :: Width -> String -> String
+padalpha = pad alphaChar
 
 ------------------- Art
 
-artformat :: Width -> String -> [String]
-artformat width txt
-  = map (padspace width) (lines txt)
+artformat :: Width -> String -> Char -> [String]
+artformat width txt alphaCh
+  = map ((padalpha width) . (map repl))(lines txt)
+  where
+    repl ch | ch == alphaCh = alphaChar
+            | otherwise     = ch
 
 ------------------- Text handling
 
