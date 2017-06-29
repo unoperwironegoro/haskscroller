@@ -23,14 +23,23 @@ runGame scenes
 
 -- Game loop
 gloop :: Rational               -> -- Loop time /ms
-         Int                    -> -- Max Cycles (< 1 := inf)
          (w -> IO())            -> -- Display function
          ([Key] -> a)           -> -- Key interpreter
          (w -> a -> w)          -> -- Game logic
          w                      -> -- Initial world state
          (w -> Bool)            -> -- Terminal state evaluator
          IO()
-gloop tms cycles output keyintr logic world fin
+gloop = tgloop 0
+
+tgloop :: Int                    -> -- Max Cycles (< 1 := inf)
+          Rational               -> -- Loop time /ms
+          (w -> IO())            -> -- Display function
+          ([Key] -> a)           -> -- Key interpreter
+          (w -> a -> w)          -> -- Game logic
+          w                      -> -- Initial world state
+          (w -> Bool)            -> -- Terminal state evaluator
+          IO()
+tgloop cycles tms output keyintr logic world fin
   = do
     t <- getCurrentTime
     gloop' (tms, output, keyintr, logic, fin) cycles world t

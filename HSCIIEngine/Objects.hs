@@ -5,7 +5,7 @@ import HSCIIEngine.Types
 
 import Data.List
 
-toObject :: [String] -> Coords -> Object
+toObject :: Image -> Coords -> Object
 toObject img coords
   = (coords, dim, img)
   where

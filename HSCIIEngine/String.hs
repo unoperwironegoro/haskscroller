@@ -21,12 +21,15 @@ padalpha = pad alphaChar
 
 ------------------- Art
 
-artformat :: Width -> String -> Char -> [String]
-artformat width txt alphaCh
+artformatTransp :: Width -> String -> Char -> [String]
+artformatTransp width txt alphaCh
   = map ((padalpha width) . (map repl))(lines txt)
   where
     repl ch | ch == alphaCh = alphaChar
             | otherwise     = ch
+
+artformat :: Width -> String -> [String]
+artformat width txt = artformatTransp width txt alphaChar
 
 ------------------- Text handling
 

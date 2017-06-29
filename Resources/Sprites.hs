@@ -2,7 +2,7 @@ module Resources.Sprites where
 
 import HSCIIEngine.String
 
-imgLogo = artformat 17
+imgLogo = artformatTransp 17
   ".__..__....______\n\
   \/ |.| |.../ ____|\n\
   \|_|_|_|..|_/____.\n\
@@ -10,3 +10,6 @@ imgLogo = artformat 17
   \| |.| |...____/ |\n\
   \|_|.|_/..|_____/."
   '.'
+
+imgBind = artformat 3
+  ">>="

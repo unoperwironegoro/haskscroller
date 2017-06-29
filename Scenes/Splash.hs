@@ -4,22 +4,23 @@ import HSCIIEngine.Engine
 import HSCIIEngine.Objects
 import HSCIIEngine.Display
 import HSCIIEngine.Types
+
 import GameCommon
 
 type Splash = [Object]
 
-splashloop = gloop mspf 70 renderSplash anyKey splash initState splashFin
+splash = tgloop 70 mspf draw anyKey update initState end
 
 initState = [objLogo]
 
-splash :: Splash -> Bool -> Splash
-splash state False
+update :: Splash -> Bool -> Splash
+update state False
   = map ((flip (move fps)) (0, 12)) state
-splash _ True
+update _ True
   = skipSplash
 
-renderSplash :: Splash -> IO()
-renderSplash state
+draw :: Splash -> IO()
+draw state
   = do
     wipe (gheight + 3) -- 2 + 1 (border, input line)
     render (drawOver gCanvas state)
@@ -29,8 +30,8 @@ anyKey :: [Char] -> Bool
 anyKey [] = False
 anyKey _ = True
 
+end :: Splash -> Bool
+end = (==) skipSplash
+
 skipSplash :: Splash
 skipSplash = [((0,0), (0,0), ["Skip Splash Screen"])]
-
-splashFin :: Splash -> Bool
-splashFin = (==) skipSplash
