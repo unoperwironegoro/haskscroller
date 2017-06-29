@@ -3,10 +3,11 @@ module Scenes.Calibration where
 import HSCIIEngine.Objects
 import HSCIIEngine.Display
 import HSCIIEngine.String
+import HSCIIEngine.Types
 
 import GameCommon
 
-objPrompt = toObject (txtformat (gwidth - 6) txtPrompt) (3,15)
+objPrompt = toObject (txtformat (gwidth - 6) txtPrompt) (V2 3 15)
 
 calibrate
   = do

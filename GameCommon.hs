@@ -6,10 +6,10 @@ import HSCIIEngine.Objects
 
 import Resources.Sprites
 
-gdim@(gwidth, gheight) = (100, 30) :: Dimensions
+gdim@(V2 gwidth gheight) = (V2 100 30) :: Dimensions
 fps = 30 :: Float
 mspf = (1000 / (realToFrac fps)) :: Rational
 
 gCanvas = blankCanvas gdim
 
-objLogo = toObject imgLogo (40,3)
+objLogo = toObject imgLogo (V2 40 3)

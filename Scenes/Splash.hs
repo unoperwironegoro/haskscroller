@@ -15,7 +15,7 @@ initState = [objLogo]
 
 update :: Splash -> Bool -> Splash
 update state False
-  = map ((flip (move fps)) (0, 12)) state
+  = map ((flip (move fps)) (V2 0 12)) state
 update _ True
   = skipSplash
 
@@ -34,4 +34,4 @@ end :: Splash -> Bool
 end = (==) skipSplash
 
 skipSplash :: Splash
-skipSplash = [((0,0), (0,0), ["Skip Splash Screen"])]
+skipSplash = [(v2fzero, (V2 0 0), ["Skip Splash Screen"])]

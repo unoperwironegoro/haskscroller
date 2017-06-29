@@ -19,6 +19,7 @@ runGame scenes
     configureIO
     sequence scenes
     showCursor
+    -- TODO move cursor to the end?
     return ()
 
 -- Game loop
