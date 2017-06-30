@@ -49,7 +49,7 @@ relhitboxE (Ent _ _ hitbox _) = hitbox
 hitboxE :: Entity -> Hitbox
 hitboxE entity
   = moveHB (relhitboxE entity) (posE entity)
-
+  
 moveHB :: Hitbox -> V2F -> Hitbox
 moveHB (tlbox, brbox) disp
   = (disp + tlbox, disp + brbox)
