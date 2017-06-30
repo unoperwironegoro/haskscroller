@@ -3,6 +3,7 @@ module Scenes.Haskscroller.Game where
 import HSCIIEngine.Engine
 import HSCIIEngine.Objects
 import HSCIIEngine.Display
+import HSCIIEngine.Types
 
 import Scenes.Haskscroller.Types
 import Scenes.Haskscroller.Prefabs
@@ -19,7 +20,9 @@ keyMapping = M.fromList
 
 game = gloop mspf draw keyhdl update initState fin
 
-initState = (M.empty, [1..]) `addEntity` entBind
+initState = (M.empty, [1..])
+            `addEntity` entBind
+            `addEntity` (setPosE (V2 20 7) entComment)
 
 update :: World -> [Action] -> World
 update world@(idEnts, _) actions
