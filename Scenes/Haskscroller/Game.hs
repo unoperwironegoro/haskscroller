@@ -11,6 +11,7 @@ import Scenes.Haskscroller.Entity
 
 import Data.Maybe
 import qualified Data.Map as M
+import qualified DataStructures.AdexMap as Adex
 
 import GameCommon
 
@@ -20,13 +21,13 @@ keyMapping = M.fromList
 
 game = gloop mspf draw keyhdl update initState fin
 
-initState = (M.empty, [1..])
+initState = Adex.empty
             `addEntity` entBind
             `addEntity` (setPosE (V2 20 7) entComment)
 
 update :: World -> [Action] -> World
-update world@(idEnts, _) actions
-  = reap (update' world (M.toList idEnts))
+update world actions
+  = reap (update' world (Adex.toList world))
   where
     -- TODO consider set of dead entities
     update' :: World -> [(ID, Entity)] -> (World, [ID])
@@ -38,20 +39,16 @@ update world@(idEnts, _) actions
         (w', deads) = updateE w actions ie
 
     reap :: (World, [ID]) -> World
-    reap (w, []) = w
-    reap ((ies, freeids), deads)
-      = (living, freeids)
-      where
-        living = foldl (flip M.delete) ies deads
+    reap (w, deads) = foldl (flip Adex.delete) w deads
 
 draw :: World -> IO()
-draw (idEnts, _)
+draw world
   = do
     wipe (gheight + 3) -- 2 + 1 (border, input line)
     render (drawOver gCanvas entityObjs)
     return ()
   where
-    entityObjs = [ obj | (Ent _ _ _ obj) <- (M.elems idEnts)]
+    entityObjs = [ obj | (Ent _ _ _ obj) <- (Adex.elems world)]
 
 keyhdl :: [Char] -> [Action]
 keyhdl

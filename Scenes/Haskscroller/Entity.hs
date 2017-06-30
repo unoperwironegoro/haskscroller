@@ -5,7 +5,7 @@ import HSCIIEngine.Objects
 
 import Scenes.Haskscroller.Types
 import Data.Maybe
-import Data.Map
+import DataStructures.AdexMap as Adex
 
 toEntity :: Image -> V2F -> (Float, Float, Float, Float) -> [Behaviour] -> Properties
          -> Entity
@@ -16,8 +16,8 @@ toEntity img coords (l, t, w, h) behaviours props
     object = (toObject img coords)
 
 addEntity :: World -> Entity -> World
-addEntity (entities, (nextID:ids)) newEntity
-  = (insert nextID newEntity entities, ids)
+addEntity world newEntity
+  = add newEntity world
 
 moveE :: Float -> V2F -> Entity -> Entity
 moveE scale coords (Ent ps bs h obj)
@@ -33,12 +33,12 @@ updateE world actions (eID, Ent _ behaviours _ _)
   where
     update' :: [Behaviour] -> World -> (World, [ID])
     update' [] w = (w, [])
-    update' (b:bs) w@(ies, _)
+    update' (b:bs) w
       = (recw, deads ++ recdeads)
       where
         (recw, recdeads) = update' bs w'
         (w', deads) = b ie w actions
-        ie = (eID, fromJust (Data.Map.lookup eID ies))
+        ie = (eID, fromJust (Adex.lookup eID w))
 
 posE :: Entity -> V2F
 posE (Ent _ _ _ (pos, _, _)) = pos
@@ -49,7 +49,7 @@ relhitboxE (Ent _ _ hitbox _) = hitbox
 hitboxE :: Entity -> Hitbox
 hitboxE entity
   = moveHB (relhitboxE entity) (posE entity)
-  
+
 moveHB :: Hitbox -> V2F -> Hitbox
 moveHB (tlbox, brbox) disp
   = (disp + tlbox, disp + brbox)

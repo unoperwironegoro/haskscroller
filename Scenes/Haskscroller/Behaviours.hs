@@ -7,6 +7,7 @@ import Scenes.Haskscroller.Areas
 import Scenes.Haskscroller.Types
 import Scenes.Haskscroller.Property
 
+import DataStructures.AdexMap
 import GameCommon
 
 import qualified Data.Map as M
@@ -50,4 +51,5 @@ despawnBehaviour (eid, entity) world@(ies, freeids) _
     offscreen = despawnbox `contains` (hitboxE entity)
 
 spawnerBehaviour :: [SpawnInstruction] -> Behaviour
-spawnerBehaviour = undefined
+spawnerBehaviour sis
+  = undefined

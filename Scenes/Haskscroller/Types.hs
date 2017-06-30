@@ -2,16 +2,19 @@ module Scenes.Haskscroller.Types where
 
 import HSCIIEngine.Types
 
+import qualified DataStructures.AdexMap as Adex
 import Data.Map
 
-type World = (Map ID Entity, [ID])
+type World = Adex.AdexMap Entity
 data Action = UP | DOWN | LEFT | RIGHT | SELECT deriving (Eq)
 
 type Behaviour = ((ID, Entity) -> -- 'this' Entity reference
+                  --ID           -> -- 'this' Behaviour reference
                   World        -> -- Current world
                   [Action]     -> -- Inputs
                   (World,         -- New world
                     [ID]))        -- Entities to cull
+type Behaviours = Adex.AdexMap Behaviour
 
 type Hitbox = (V2F, V2F) -- Corners: top-left, bottom-right
 type Properties = Map String String -- TODO replace this unhaskellic hack
