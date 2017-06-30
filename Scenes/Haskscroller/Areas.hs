@@ -6,11 +6,11 @@ import Scenes.Haskscroller.Types
 import GameCommon
 
 wbox@(wtlpos, wbrpos@(V2 wwidth wheight))
-  = (v2fzero, fmap (fromIntegral . (+(-1))) gdim) :: Hitbox
+  = (v2fzero, fmap (fromIntegral) gdim) :: Hitbox
 
 --  Entity spawn area
 spawnbox@(stlpos, sbrpos)
-  = relativeHibox tlpos 10 wheight
+  = relativeHitbox tlpos 10 wheight
   where tlpos = (V2 (wwidth + 1) 0)
 
 -- Entity despawn area
@@ -19,6 +19,6 @@ despawnbox@(etlpos, ebrpos)
 
 -- Player permitted movement area
 pbox@(ptlpos, pbrpos)
-  = relativeHibox v2fzero (wwidth - 32) wheight
+  = relativeHitbox v2fzero (wwidth - 32) wheight
 
 playerSpawn = (V2 5 15) :: V2F

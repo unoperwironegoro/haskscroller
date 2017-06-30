@@ -18,13 +18,14 @@ type Properties = Map String String
 type ID = Int
 data Entity = Ent Properties [Behaviour] Hitbox Object
 
-relativeHibox :: V2F -> Float -> Float -> Hitbox
-relativeHibox pos width height
+relativeHitbox :: V2F -> Float -> Float -> Hitbox
+relativeHitbox pos width height
   = (pos, pos + (V2 width height))
 
 contains :: Hitbox -> Hitbox -> Bool
 contains outerbox (tlpos, brpos)
-  = outerbox `containsPos` tlpos && outerbox `containsPos` brpos
+  = (outerbox `containsPos` tlpos) &&
+    (outerbox `containsPos` brpos)
 
 containsPos :: Hitbox -> V2F -> Bool
 containsPos (tlpos, brpos) pos

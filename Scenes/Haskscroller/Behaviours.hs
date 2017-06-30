@@ -12,10 +12,10 @@ wasdBehaviour :: Behaviour
 wasdBehaviour (eid, entity)
               world@(ies, freeids) actions
   = if moveValid
-    then ((adjust (movePlayer disp) eid ies, freeids), [])
+    then ((insert eid movedPlayer ies, freeids), [])
     else (world, [])
   where
-    movePlayer = moveE 1
+    movedPlayer = (moveE 1 disp entity)
     disp = V2 dx dy
     dy = axis DOWN UP
     dx = axis RIGHT LEFT
@@ -23,7 +23,7 @@ wasdBehaviour (eid, entity)
       = if backward `elem` actions then -1 else
         if forward `elem` actions then 1 else 0
     moveValid
-      = pbox `containsPos` ((posE entity) + disp)
+      = pbox `contains` (hitboxE movedPlayer)
 
 -- Restores the id!
 despawnBehaviour :: Behaviour

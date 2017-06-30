@@ -9,10 +9,10 @@ import Data.Map
 
 toEntity :: Image -> V2F -> (Float, Float, Float, Float) -> [Behaviour] -> Properties
          -> Entity
-toEntity img coords (l, t, r, b) behaviours props
+toEntity img coords (l, t, w, h) behaviours props
   = Ent props behaviours hitbox object
   where
-    hitbox = ((V2 l t), (V2 r b))
+    hitbox = relativeHitbox (V2 l t) w h
     object = (toObject img coords)
 
 addEntity :: World -> Entity -> World
@@ -43,12 +43,12 @@ updateE world actions (eID, Ent _ behaviours _ _)
 posE :: Entity -> V2F
 posE (Ent _ _ _ (pos, _, _)) = pos
 
-hitboxE :: Entity -> Hitbox
-hitboxE (Ent _ _ hitbox _) = hitbox
+relhitboxE :: Entity -> Hitbox
+relhitboxE (Ent _ _ hitbox _) = hitbox
 
-hitboxPos :: Entity -> Hitbox
-hitboxPos entity
-  = fmap (+ (posE entity)) (hitboxE entity)
+hitboxE :: Entity -> Hitbox
+hitboxE entity
+  = moveHB (relhitboxE entity) (posE entity)
 
 moveHB :: Hitbox -> V2F -> Hitbox
 moveHB (tlbox, brbox) disp
