@@ -27,16 +27,17 @@ setPosE :: V2F -> Entity -> Entity
 setPosE coords (Ent ps bs h obj@(pos, _, _))
   = Ent ps bs h (move 1 obj (coords - pos))
 
-updateE :: World -> [Action] -> (ID, Entity) -> World
+updateE :: World -> [Action] -> (ID, Entity) -> (World, [ID])
 updateE world actions (eID, Ent _ behaviours _ _)
   = update' behaviours world
   where
-    update' :: [Behaviour] -> World -> World
-    update' [] w = w
+    update' :: [Behaviour] -> World -> (World, [ID])
+    update' [] w = (w, [])
     update' (b:bs) w@(ies, _)
-      = update' bs w'
+      = (recw, deads ++ recdeads)
       where
-        w' = b ie w actions
+        (recw, recdeads) = update' bs w'
+        (w', deads) = b ie w actions
         ie = (eID, fromJust (Data.Map.lookup eID ies))
 
 posE :: Entity -> V2F

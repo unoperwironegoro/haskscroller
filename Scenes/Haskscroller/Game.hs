@@ -23,12 +23,23 @@ initState = (M.empty, [1..]) `addEntity` entBind
 
 update :: World -> [Action] -> World
 update world@(idEnts, _) actions
-  = update' world (M.toList idEnts)
+  = reap (update' world (M.toList idEnts))
   where
-    update' :: World -> [(ID, Entity)] -> World
-    update' w [] = w
+    -- TODO consider set of dead entities
+    update' :: World -> [(ID, Entity)] -> (World, [ID])
+    update' w [] = (w, [])
     update' w (ie:ies)
-      = update' (updateE w actions ie) ies
+      = (w'', deads ++ recdeads)
+      where
+        (w'', recdeads) = update' w' ies
+        (w', deads) = updateE w actions ie
+
+    reap :: (World, [ID]) -> World
+    reap (w, []) = w
+    reap ((ies, freeids), deads)
+      = (living, freeids)
+      where
+        living = foldl (flip M.delete) ies deads
 
 draw :: World -> IO()
 draw (idEnts, _)

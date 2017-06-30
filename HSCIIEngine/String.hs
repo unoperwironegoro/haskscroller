@@ -1,8 +1,11 @@
+
 module HSCIIEngine.String where
 
 import HSCIIEngine.Types
 
 import Data.Char
+
+-- TODO Allow for colours
 
 -- Used to represent transparency
 alphaChar = chr 30 :: Char
