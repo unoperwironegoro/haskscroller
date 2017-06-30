@@ -14,9 +14,12 @@ type Behaviour = ((ID, Entity) -> -- 'this' Entity reference
                     [ID]))        -- Entities to cull
 
 type Hitbox = (V2F, V2F) -- Corners: top-left, bottom-right
-type Properties = Map String String
+type Properties = Map String String -- TODO replace this unhaskellic hack
 type ID = Int
 data Entity = Ent Properties [Behaviour] Hitbox Object
+
+type Delay = Int
+type SpawnInstruction = (Entity, V2F, Delay)
 
 relativeHitbox :: V2F -> Float -> Float -> Hitbox
 relativeHitbox pos width height
