@@ -15,10 +15,6 @@ toEntity img coords (l, t, w, h) behaviours props
     hitbox = relativeHitbox (V2 l t) w h
     object = (toObject img coords)
 
-addEntity :: World -> Entity -> World
-addEntity world newEntity
-  = add newEntity world
-
 moveE :: Float -> V2F -> Entity -> Entity
 moveE scale coords (Ent ps bs h obj)
   = Ent ps bs h (move scale obj coords)

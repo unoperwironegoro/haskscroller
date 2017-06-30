@@ -8,6 +8,7 @@ import HSCIIEngine.Types
 import Scenes.Haskscroller.Types
 import Scenes.Haskscroller.Prefabs
 import Scenes.Haskscroller.Entity
+import Scenes.Haskscroller.World
 
 import Data.Maybe
 import qualified Data.Map as M
@@ -39,7 +40,7 @@ update world actions
         (w', deads) = updateE w actions ie
 
     reap :: (World, [ID]) -> World
-    reap (w, deads) = foldl (flip Adex.delete) w deads
+    reap (w, deads) = foldl removeEntity w deads
 
 draw :: World -> IO()
 draw world
@@ -48,7 +49,7 @@ draw world
     render (drawOver gCanvas entityObjs)
     return ()
   where
-    entityObjs = [ obj | (Ent _ _ _ obj) <- (Adex.elems world)]
+    entityObjs = [ obj | (Ent _ _ _ obj) <- (getEntities world)]
 
 keyhdl :: [Char] -> [Action]
 keyhdl

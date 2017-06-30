@@ -9,7 +9,7 @@ type World = Adex.AdexMap Entity
 data Action = UP | DOWN | LEFT | RIGHT | SELECT deriving (Eq)
 
 type Behaviour = ((ID, Entity) -> -- 'this' Entity reference
-                  --ID           -> -- 'this' Behaviour reference
+                  --TODO ID           -> -- 'this' Behaviour reference
                   World        -> -- Current world
                   [Action]     -> -- Inputs
                   (World,         -- New world
@@ -17,7 +17,7 @@ type Behaviour = ((ID, Entity) -> -- 'this' Entity reference
 type Behaviours = Adex.AdexMap Behaviour
 
 type Hitbox = (V2F, V2F) -- Corners: top-left, bottom-right
-type Properties = Map String String -- TODO replace this unhaskellic hack
+type Properties = Map String String -- TODO replace unhaskellic hack
 type ID = Int
 data Entity = Ent Properties [Behaviour] Hitbox Object
 

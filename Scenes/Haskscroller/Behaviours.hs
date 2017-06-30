@@ -7,15 +7,13 @@ import Scenes.Haskscroller.Areas
 import Scenes.Haskscroller.Types
 import Scenes.Haskscroller.Property
 
-import DataStructures.AdexMap
+import DataStructures.AdexMap as Adex
 import GameCommon
 
-import qualified Data.Map as M
-
 wasdBehaviour :: Behaviour
-wasdBehaviour (eid, entity) world@(ies, freeids) actions
+wasdBehaviour (eid, entity) world actions
   = if moveValid
-    then ((M.insert eid movedPlayer ies, freeids), [])
+    then (Adex.update eid movedPlayer world, [])
     else (world, [])
   where
     movedPlayer = (moveE 1 disp entity)
@@ -30,10 +28,10 @@ wasdBehaviour (eid, entity) world@(ies, freeids) actions
 
 -- TODO properly handle "not enclosed" case
 moveBehaviour :: Behaviour
-moveBehaviour (eid, entity) world@(ies, freeids) _
+moveBehaviour (eid, entity) world _
   = if moveValid
-    then ((M.insert eid movedEntity ies, freeids), [])
-    else ((M.insert eid rmovedEntity ies, freeids), [])
+    then (Adex.update eid movedEntity world, [])
+    else (Adex.update eid rmovedEntity world, [])
   where
     disp = read (rProperty entity prV (V2 0 0))
     movedEntity = (moveE fps disp entity)
@@ -44,7 +42,7 @@ moveBehaviour (eid, entity) world@(ies, freeids) _
 
 -- Restores the id!
 despawnBehaviour :: Behaviour
-despawnBehaviour (eid, entity) world@(ies, freeids) _
+despawnBehaviour (eid, entity) world _
   | offscreen = (world, [eid])
   | otherwise = (world, [])
   where
