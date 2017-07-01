@@ -8,8 +8,8 @@ import qualified Data.Map as M
 findProperty = M.lookup
 updateProperty = M.insert
 
-prHP = "health"
-prV = "velocity"
+tagHP = "health"
+tagV = "velocity"
 
 rProperty :: (Show a) => Entity -> String -> a -> String
 rProperty (Ent props _ _ _) key vdefault

@@ -29,16 +29,18 @@ wasdBehaviour (eid, entity) world actions
 -- TODO properly handle "not enclosed" case
 moveBehaviour :: Behaviour
 moveBehaviour (eid, entity) world _
-  = if moveValid
-    then (Adex.update eid movedEntity world, [])
-    else (Adex.update eid rmovedEntity world, [])
+  = (Adex.update eid movedEntity world, [])
   where
-    disp = read (rProperty entity prV (V2 0 0))
-    movedEntity = (moveE fps disp entity)
-    disp' = flipY disp
-    entity' = wProperty entity prV disp'
-    rmovedEntity = moveE fps disp' entity'
-    moveValid = heightbox `contains` (hitboxE movedEntity)
+    movedEntity = if moveValid
+                  then testMovedEntity
+                  else revMovedEntity
+    testMovedEntity = moveE fps vel entity
+    vel = getVel entity (V2 0 0)
+    moveValid = heightbox `contains` (hitboxE testMovedEntity)
+    -- "Bounce" off the wall
+    revVel = flipY vel
+    revEntity = setVel entity revVel
+    revMovedEntity = moveE fps revVel revEntity
 
 -- Restores the id!
 despawnBehaviour :: Behaviour
@@ -51,3 +53,6 @@ despawnBehaviour (eid, entity) world _
 spawnerBehaviour :: [SpawnInstruction] -> Behaviour
 spawnerBehaviour sis
   = undefined
+
+
+------------------- Helpers

@@ -12,20 +12,25 @@ import Scenes.Haskscroller.Types
 import Data.Map as M
 
 toProps = M.fromList :: [(String, String)] -> Properties
-pHP hp = (prHP, show hp)
-pV  v  = (prV, show v)
+propHP hp  = (tagHP, show hp)
+propV  vel = (tagV , show vel)
 
 propNone = M.empty
 
+entBind
+  = createEntity imgBind
+    playerSpawn (0,0,3,1)
+    [wasdBehaviour]
+    propNone
 
-entBind = toEntity imgBind playerSpawn (0,0,3,1)
-          [wasdBehaviour]
-          propNone
+entCommentSpawner
+  = createEntity imgNull
+    nullSpawn (0,0,0,0)
+    [spawnerBehaviour []]
+    propNone
 
-entCommentSpawner = toEntity imgNull nullSpawn (0,0,0,0)
-                    [spawnerBehaviour []]
-                    propNone
-
-entComment = toEntity imgComment nullSpawn (0,0,2,1)
-             [despawnBehaviour, moveBehaviour]
-             (toProps [pHP 12, pV (V2 (-1) 0)])
+entComment
+  = createEntity imgComment
+    nullSpawn (0,0,2,1)
+    [despawnBehaviour, moveBehaviour]
+    (toProps [propHP 12, propV (V2 (-1) 0)])

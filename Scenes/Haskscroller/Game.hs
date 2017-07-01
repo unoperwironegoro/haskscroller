@@ -24,7 +24,7 @@ game = gloop mspf draw keyhdl update initState fin
 
 initState = Adex.empty
             `addEntity` entBind
-            `addEntity` (setPosE (V2 20 7) entComment)
+            `addEntity` (setPosE (V2 30 7) entComment)
 
 update :: World -> [Action] -> World
 update world actions
