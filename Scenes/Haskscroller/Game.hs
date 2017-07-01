@@ -9,6 +9,7 @@ import Scenes.Haskscroller.Types
 import Scenes.Haskscroller.Prefabs
 import Scenes.Haskscroller.Entity
 import Scenes.Haskscroller.World
+import Scenes.Haskscroller.Areas
 
 import Data.Maybe
 import qualified Data.Map as M
@@ -22,9 +23,13 @@ keyMapping = M.fromList
 
 game = gloop mspf draw keyhdl update initState fin
 
-initState = Adex.empty
-            `addEntity` entBind
-            `addEntity` (setPosE (V2 30 7) entComment)
+onlyPlayerState = Adex.empty `addEntity` entPlayer
+initState
+  = foldl (addEntity) onlyPlayerState startNPCEntities
+  where
+    startNPCEntities = zipWith (moveE 1) positions commentShower :: [Entity]
+    commentShower = repeat (setPosE (V2 15 (-1)) entComment)
+    positions = take gheight (scanl1 (+) (repeat ((V2 0.2 1) :: V2F)))
 
 update :: World -> [Action] -> World
 update world actions

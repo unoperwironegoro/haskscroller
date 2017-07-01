@@ -17,7 +17,7 @@ propV  vel = (tagV , show vel)
 
 propNone = M.empty
 
-entBind
+entPlayer
   = createEntity imgBind
     playerSpawn (0,0,3,1)
     [wasdBehaviour]
