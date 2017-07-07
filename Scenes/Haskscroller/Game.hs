@@ -28,7 +28,8 @@ initState
   = foldl (addEntity) onlyPlayerState startNPCEntities
   where
     startNPCEntities = zipWith (moveE 1) positions commentShower :: [Entity]
-    commentShower = repeat (setPosE (V2 15 (-1)) entComment)
+    commentShower = repeat comment
+    comment = (setVel (setPosE (V2 35 (-1)) entComment) (V2 (-3) 0))
     positions = take gheight (scanl1 (+) (repeat ((V2 0.2 1) :: V2F)))
 
 update :: World -> [Action] -> World

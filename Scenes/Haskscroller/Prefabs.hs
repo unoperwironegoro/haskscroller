@@ -26,7 +26,7 @@ entPlayer
 entCommentSpawner
   = createEntity imgNull
     nullSpawn (0,0,0,0)
-    [spawnerBehaviour []]
+    [spawnerBehaviour [] nullBehaviour]
     propNone
 
 entComment

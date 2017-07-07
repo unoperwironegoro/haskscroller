@@ -22,6 +22,9 @@ update i v (m, is) = (M.insert i v m, is)
 toList :: AdexMap a -> [(Int, a)]
 toList = (M.toList . fst)
 
+fromVals :: [a] -> AdexMap a
+fromVals vs = foldl (flip add) empty vs 
+
 lookup :: Int -> AdexMap a -> Maybe a
 lookup i (m, _) = M.lookup i m
 

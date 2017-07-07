@@ -6,14 +6,14 @@ import Scenes.Haskscroller.Entity
 import Scenes.Haskscroller.Areas
 import Scenes.Haskscroller.Types
 import Scenes.Haskscroller.Property
+import Scenes.Haskscroller.World
 
-import DataStructures.AdexMap as Adex
 import GameCommon
 
 wasdBehaviour :: Behaviour
-wasdBehaviour (eid, entity) world actions
+wasdBehaviour (eid, entity) _ world actions
   = if moveValid
-    then (Adex.update eid movedPlayer world, [])
+    then (updateW world eid movedPlayer, [])
     else (world, [])
   where
     movedPlayer = (moveE 1 disp entity)
@@ -28,8 +28,8 @@ wasdBehaviour (eid, entity) world actions
 
 -- TODO properly handle "not enclosed" case
 moveBehaviour :: Behaviour
-moveBehaviour (eid, entity) world _
-  = (Adex.update eid movedEntity world, [])
+moveBehaviour (eid, entity) _ world _
+  = (updateW world eid movedEntity, [])
   where
     movedEntity = if moveValid
                   then testMovedEntity
@@ -44,15 +44,29 @@ moveBehaviour (eid, entity) world _
 
 -- Restores the id!
 despawnBehaviour :: Behaviour
-despawnBehaviour (eid, entity) world _
+despawnBehaviour (eid, entity) _ world _
   | offscreen = (world, [eid])
   | otherwise = (world, [])
   where
-    offscreen = despawnbox `contains` (hitboxE entity)
+    offscreen = despawnboxL `contains` (hitboxE entity) ||
+                despawnboxR `contains` (hitboxE entity)
 
-spawnerBehaviour :: [SpawnInstruction] -> Behaviour
-spawnerBehaviour sis
-  = undefined
+spawnerBehaviour :: [SpawnInstruction] -> Behaviour -> Behaviour
+spawnerBehaviour [] postBehaviour = postBehaviour
+spawnerBehaviour ((e, d):sis) postBehaviour
+  | d == 0    = spawnerBehaviour ((e, (d-1)):sis) postBehaviour
+  | otherwise = spawnerBehaviour'
+  where
+    spawnerBehaviour' :: Behaviour
+    spawnerBehaviour' (eid, spawner) bid world _
+      = (updateW world' eid spawner', [])
+      where
+        world' = world `addEntity` newEntity
+        newEntity = setRelPosE spawner e
+        spawner' = updateBehaviour spawner bid spawnerBehaviour''
+        spawnerBehaviour'' = spawnerBehaviour sis postBehaviour
 
-
+nullBehaviour :: Behaviour
+nullBehaviour (eid, entity) bid world _
+  = (updateW world eid (removeBehaviour entity bid), [])
 ------------------- Helpers

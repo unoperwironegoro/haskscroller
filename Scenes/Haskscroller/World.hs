@@ -13,3 +13,6 @@ getEntities = Adex.elems
 
 removeEntity :: World -> ID -> World
 removeEntity = (flip Adex.delete)
+
+updateW :: World -> ID -> Entity -> World
+updateW = \world eid entity -> Adex.update eid entity world

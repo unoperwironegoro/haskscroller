@@ -15,15 +15,20 @@ createEntity :: Image                        -> -- Sprite
                 [Behaviour]                  -> -- Per-frame update functions
                 Properties                   -> -- Tagged Data
                 Entity
-createEntity img coords (l, t, w, h) bhvs props
+createEntity img coords (l, t, w, h) bhvlist props
   = Ent props bhvs hbx obj
   where
     hbx = relativeHitbox (V2 l t) w h
     obj = (toObject img coords)
+    bhvs = Adex.fromVals bhvlist
 
 moveE :: Float -> V2F -> Entity -> Entity
 moveE scale coords (Ent props bhvs hbx obj)
   = Ent props bhvs hbx (move scale obj coords)
+
+setRelPosE :: Entity -> Entity -> Entity
+setRelPosE origin entity
+  = moveE 1 (posE origin) entity
 
 setPosE :: V2F -> Entity -> Entity
 setPosE coords (Ent props bhvs hbx obj@(pos, _, _))
@@ -31,19 +36,27 @@ setPosE coords (Ent props bhvs hbx obj@(pos, _, _))
 
 updateE :: World -> [Action] -> (ID, Entity) -> (World, [ID])
 updateE world actions (eID, entity)
-  = update' (behaviours entity) world
+  = update' (Adex.toList (behaviours entity)) world
   where
-    update' :: [Behaviour] -> World -> (World, [ID])
+    update' :: [(ID, Behaviour)] -> World -> (World, [ID])
     update' [] w = (w, [])
-    update' (b:bs) w
+    update' ((bid, b):bs) w
       = (recw, deads ++ recdeads)
       where
         (recw, recdeads) = update' bs w'
-        (w', deads) = b ie w actions
+        (w', deads) = b ie bid w actions
         ie = (eID, fromJust (Adex.lookup eID w)) -- TODO remove?
 
-behaviours :: Entity -> [Behaviour]
+behaviours :: Entity -> Behaviours
 behaviours (Ent _ bhvs _ _) = bhvs
+
+updateBehaviour :: Entity -> ID -> Behaviour -> Entity
+updateBehaviour (Ent props bhvs hbx obj) bid bhv
+  = Ent props (Adex.update bid bhv bhvs) hbx obj
+
+removeBehaviour :: Entity -> ID -> Entity
+removeBehaviour (Ent props bhvs hbx obj) bid
+  = Ent props (Adex.delete bid bhvs) hbx obj
 
 posE :: Entity -> V2F
 posE (Ent _ _ _ (pos, _, _)) = pos
