@@ -54,9 +54,16 @@ despawnBehaviour (eid, entity) _ world _
 spawnerBehaviour :: [SpawnInstruction] -> Behaviour -> Behaviour
 spawnerBehaviour [] postBehaviour = postBehaviour
 spawnerBehaviour ((e, d):sis) postBehaviour
-  | d == 0    = spawnerBehaviour ((e, (d-1)):sis) postBehaviour
+  | d > 0    = wait
   | otherwise = spawnerBehaviour'
   where
+    wait :: Behaviour
+    wait (eid, spawner) bid world _
+      = (updateW world eid spawner', [])
+      where
+        spawner' = updateBehaviour spawner bid spawnerBehaviour''
+        spawnerBehaviour'' = spawnerBehaviour ((e, (d-1)):sis) postBehaviour
+
     spawnerBehaviour' :: Behaviour
     spawnerBehaviour' (eid, spawner) bid world _
       = (updateW world' eid spawner', [])

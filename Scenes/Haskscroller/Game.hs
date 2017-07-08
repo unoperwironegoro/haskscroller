@@ -3,13 +3,12 @@ module Scenes.Haskscroller.Game where
 import HSCIIEngine.Engine
 import HSCIIEngine.Objects
 import HSCIIEngine.Display
-import HSCIIEngine.Types
 
 import Scenes.Haskscroller.Types
-import Scenes.Haskscroller.Prefabs
-import Scenes.Haskscroller.Entity
 import Scenes.Haskscroller.World
 import Scenes.Haskscroller.Areas
+import Scenes.Haskscroller.Entity
+import Scenes.Haskscroller.Init
 
 import Data.Maybe
 import qualified Data.Map as M
@@ -22,15 +21,6 @@ keyMapping = M.fromList
   ('a', LEFT), ('s', DOWN), ('d', RIGHT),          (' ', SELECT)]
 
 game = gloop mspf draw keyhdl update initState fin
-
-onlyPlayerState = Adex.empty `addEntity` entPlayer
-initState
-  = foldl (addEntity) onlyPlayerState startNPCEntities
-  where
-    startNPCEntities = zipWith (moveE 1) positions commentShower :: [Entity]
-    commentShower = repeat comment
-    comment = (setVel (setPosE (V2 35 (-1)) entComment) (V2 (-3) 0))
-    positions = take gheight (scanl1 (+) (repeat ((V2 0.2 1) :: V2F)))
 
 update :: World -> [Action] -> World
 update world actions

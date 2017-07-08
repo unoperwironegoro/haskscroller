@@ -4,6 +4,8 @@ import Scenes.Haskscroller.Types
 
 import DataStructures.AdexMap as Adex
 
+emptyW = Adex.empty :: World
+
 addEntity :: World -> Entity -> World
 addEntity world newEntity
   = add newEntity world
