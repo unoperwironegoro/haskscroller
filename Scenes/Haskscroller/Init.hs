@@ -16,11 +16,11 @@ initState
     entities = [entPlayer, commentSpawner] ++ commentShower
 
 commentShower
-  = zipWith (moveE 1) positions comments :: [Entity]
+  = zipWith (move 1) positions comments :: [Entity]
   where
     comments = repeat comment
-    comment = setVel (setPosE (V2 wwidth (-1)) entComment) (V2 (-10) 0)
+    comment = setVel (setPos (V2 wwidth (-1)) entComment) (V2 (-10) 0)
     positions = take gheight (scanl1 (+) (repeat ((V2 0.2 1) :: V2F)))
 
 commentSpawner
-  = setVel (setPosE (V2 wwidth (wheight / 2)) entCommentSpawner) (V2 0 (-30))
+  = setVel (setPos (V2 wwidth (wheight / 2)) entCommentSpawner) (V2 0 (-30))

@@ -6,7 +6,7 @@ import qualified DataStructures.AdexMap as Adex
 import Data.Map
 
 type World = Adex.AdexMap Entity
-data Action = UP | DOWN | LEFT | RIGHT | SELECT deriving (Eq)
+data Action = QUIT | UP | DOWN | LEFT | RIGHT | SELECT deriving (Eq)
 
 type Behaviour = ((ID, Entity) -> -- 'this' Entity reference
                   ID           -> -- 'this' Behaviour reference

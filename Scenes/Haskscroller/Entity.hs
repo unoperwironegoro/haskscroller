@@ -1,7 +1,7 @@
 module Scenes.Haskscroller.Entity where
 
 import HSCIIEngine.Types
-import HSCIIEngine.Objects
+import qualified HSCIIEngine.Objects as Obj
 
 import Scenes.Haskscroller.Types
 import Scenes.Haskscroller.Property
@@ -19,23 +19,23 @@ createEntity img coords (l, t, w, h) bhvlist props
   = Ent props bhvs hbx obj
   where
     hbx = relativeHitbox (V2 l t) w h
-    obj = (toObject img coords)
+    obj = (Obj.toObject img coords)
     bhvs = Adex.fromVals bhvlist
 
-moveE :: Float -> V2F -> Entity -> Entity
-moveE scale coords (Ent props bhvs hbx obj)
-  = Ent props bhvs hbx (move scale obj coords)
+move :: Float -> V2F -> Entity -> Entity
+move scale coords (Ent props bhvs hbx obj)
+  = Ent props bhvs hbx (Obj.move scale obj coords)
 
-setRelPosE :: Entity -> Entity -> Entity
-setRelPosE origin entity
-  = moveE 1 (posE origin) entity
+setRelPos :: Entity -> Entity -> Entity
+setRelPos origin entity
+  = move 1 (getPos origin) entity
 
-setPosE :: V2F -> Entity -> Entity
-setPosE coords (Ent props bhvs hbx obj@(pos, _, _))
-  = Ent props bhvs hbx (move 1 obj (coords - pos))
+setPos :: V2F -> Entity -> Entity
+setPos coords (Ent props bhvs hbx obj@(pos, _, _))
+  = Ent props bhvs hbx (Obj.move 1 obj (coords - pos))
 
-updateE :: World -> [Action] -> (ID, Entity) -> (World, [ID])
-updateE world actions (eID, entity)
+update :: World -> [Action] -> (ID, Entity) -> (World, [ID])
+update world actions (eID, entity)
   = update' (Adex.toList (behaviours entity)) world
   where
     update' :: [(ID, Behaviour)] -> World -> (World, [ID])
@@ -58,18 +58,18 @@ removeBehaviour :: Entity -> ID -> Entity
 removeBehaviour (Ent props bhvs hbx obj) bid
   = Ent props (Adex.delete bid bhvs) hbx obj
 
-posE :: Entity -> V2F
-posE (Ent _ _ _ (pos, _, _)) = pos
+getPos :: Entity -> V2F
+getPos (Ent _ _ _ (pos, _, _)) = pos
 
-relhitboxE :: Entity -> Hitbox
-relhitboxE (Ent _ _ hbx _) = hbx
+getRelHitbox :: Entity -> Hitbox
+getRelHitbox (Ent _ _ hbx _) = hbx
 
-hitboxE :: Entity -> Hitbox
-hitboxE entity
-  = moveHB (relhitboxE entity) (posE entity)
+getHitbox :: Entity -> Hitbox
+getHitbox entity
+  = moveHitbox (getRelHitbox entity) (getPos entity)
 
-moveHB :: Hitbox -> V2F -> Hitbox
-moveHB (tlbox, brbox) disp
+moveHitbox :: Hitbox -> V2F -> Hitbox
+moveHitbox (tlbox, brbox) disp
   = (disp + tlbox, disp + brbox)
 
 ------------------- Property Manipulation

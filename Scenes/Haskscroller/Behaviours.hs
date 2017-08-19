@@ -2,11 +2,11 @@ module Scenes.Haskscroller.Behaviours where
 
 import HSCIIEngine.Types
 
-import Scenes.Haskscroller.Entity
 import Scenes.Haskscroller.Areas
 import Scenes.Haskscroller.Types
 import Scenes.Haskscroller.Property
 import Scenes.Haskscroller.World
+import Scenes.Haskscroller.Entity
 
 import GameCommon
 
@@ -16,7 +16,7 @@ wasdBehaviour (eid, entity) _ world actions
     then (updateW world eid movedPlayer, [])
     else (world, [])
   where
-    movedPlayer = (moveE 1 disp entity)
+    movedPlayer = (move 1 disp entity)
     disp = V2 dx dy
     dy = axis DOWN UP
     dx = axis RIGHT LEFT
@@ -24,7 +24,7 @@ wasdBehaviour (eid, entity) _ world actions
       = if backward `elem` actions then -1 else
         if forward `elem` actions then 1 else 0
     moveValid
-      = pbox `contains` (hitboxE movedPlayer)
+      = pbox `contains` (getHitbox movedPlayer)
 
 -- TODO properly handle "not enclosed" case
 moveBehaviour :: Behaviour
@@ -34,13 +34,13 @@ moveBehaviour (eid, entity) _ world _
     movedEntity = if moveValid
                   then testMovedEntity
                   else revMovedEntity
-    testMovedEntity = moveE fps vel entity
+    testMovedEntity = move fps vel entity
     vel = getVel entity (V2 0 0)
-    moveValid = heightbox `contains` (hitboxE testMovedEntity)
+    moveValid = heightbox `contains` (getHitbox testMovedEntity)
     -- "Bounce" off the wall
     revVel = flipY vel
     revEntity = setVel entity revVel
-    revMovedEntity = moveE fps revVel revEntity
+    revMovedEntity = move fps revVel revEntity
 
 -- Restores the id!
 despawnBehaviour :: Behaviour
@@ -48,8 +48,8 @@ despawnBehaviour (eid, entity) _ world _
   | offscreen = (world, [eid])
   | otherwise = (world, [])
   where
-    offscreen = despawnboxL `contains` (hitboxE entity) ||
-                despawnboxR `contains` (hitboxE entity)
+    offscreen = despawnboxL `contains` (getHitbox entity) ||
+                despawnboxR `contains` (getHitbox entity)
 
 spawnerBehaviour :: [SpawnInstruction] -> Behaviour -> Behaviour
 spawnerBehaviour [] postBehaviour = postBehaviour
@@ -69,7 +69,7 @@ spawnerBehaviour ((e, d):sis) postBehaviour
       = (updateW world' eid spawner', [])
       where
         world' = world `addEntity` newEntity
-        newEntity = setRelPosE spawner e
+        newEntity = setRelPos spawner e
         spawner' = updateBehaviour spawner bid spawnerBehaviour''
         spawnerBehaviour'' = spawnerBehaviour sis postBehaviour
 

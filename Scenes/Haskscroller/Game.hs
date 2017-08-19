@@ -7,8 +7,8 @@ import HSCIIEngine.Display
 import Scenes.Haskscroller.Types
 import Scenes.Haskscroller.World
 import Scenes.Haskscroller.Areas
-import Scenes.Haskscroller.Entity
 import Scenes.Haskscroller.Init
+import qualified Scenes.Haskscroller.Entity as Entity
 
 import Data.Maybe
 import qualified Data.Map as M
@@ -17,14 +17,18 @@ import qualified DataStructures.AdexMap as Adex
 import GameCommon
 
 keyMapping = M.fromList
-  [             ('w', UP),
-  ('a', LEFT), ('s', DOWN), ('d', RIGHT),          (' ', SELECT)]
+  [('\ESC', QUIT),
 
-game = gloop mspf draw keyhdl update initState fin
+                ('w', UP),
+   ('a', LEFT), ('s', DOWN), ('d', RIGHT),          (' ', SELECT)]
 
-update :: World -> [Action] -> World
+game = gloop mspf draw keyhdl update (Just initState)
+
+update :: World -> [Action] -> Maybe World
 update world actions
-  = reap (update' world (Adex.toList world))
+  = if QUIT `elem` actions
+      then Nothing
+      else Just (reap (update' world (Adex.toList world)))
   where
     -- TODO consider set of dead entities
     update' :: World -> [(ID, Entity)] -> (World, [ID])
@@ -33,7 +37,7 @@ update world actions
       = (w'', deads ++ recdeads)
       where
         (w'', recdeads) = update' w' ies
-        (w', deads) = updateE w actions ie
+        (w', deads) = Entity.update w actions ie
 
     reap :: (World, [ID]) -> World
     reap (w, deads) = foldl removeEntity w deads
@@ -50,6 +54,3 @@ draw world
 keyhdl :: [Char] -> [Action]
 keyhdl
   = catMaybes . (map ((flip M.lookup) keyMapping))
-
-fin :: World -> Bool
-fin = (\_ -> False)
