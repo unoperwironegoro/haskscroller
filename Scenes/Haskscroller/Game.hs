@@ -28,7 +28,7 @@ update :: World -> [Action] -> Maybe World
 update world actions
   = if QUIT `elem` actions
       then Nothing
-      else Just (reap (update' world (Adex.toList world)))
+      else Just $ reap (update' world (Adex.toList world))
   where
     -- TODO consider set of dead entities
     update' :: World -> [(ID, Entity)] -> (World, [ID])
