@@ -44,16 +44,23 @@ boundedMoveBehaviour bounds
     moveBehaviour (eid, entity) _ world _
       = (updateW world eid movedEntity, [])
       where
-        movedEntity = if moveValid
+        movedEntity = if bounded
                         then testMovedEntity
-                        else revMovedEntity
-        testMovedEntity = move fps vel entity
-        vel = getVel entity (V2 0 0)
-        moveValid = vmoveArea `contains` (getHitbox testMovedEntity)
-        -- "Bounce" off the wall
-        revVel = flipY vel
-        revEntity = setVel entity revVel
-        revMovedEntity = move fps revVel revEntity
+                        else bouncedEntity
+        bounded = bounds `contains` movedHitbox
+        movedHitbox = (getHitbox testMovedEntity)
+        testMovedEntity = move fps v entity
+        v@(V2 vx vy) = getVel entity (V2 0 0)
+        -- "Bounce" off the bounds
+        bouncedEntity = setVel (move fps v' entity) v'
+        v' = (V2 vx' vy')
+        vy' = bounce vy boxAbove boxBelow
+        vx' = bounce vx boxLeftOf boxRightOf
+        bounce vv lower higher
+          = if (movedHitbox `lower` bounds && vv < 0)
+              || (movedHitbox `higher` bounds && vv > 0)
+              then (-vv)
+              else vv
 
 -- Restores the id!
 despawnBehaviour :: Behaviour

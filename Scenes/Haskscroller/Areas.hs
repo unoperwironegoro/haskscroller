@@ -31,7 +31,7 @@ entityArea
 
 -- Player permitted movement area
 playerArea
-  = relativeHitbox v2fzero (vwidth - 32) vheight
+  = (v2fzero, (V2 (vwidth - 32) vheight))
 
 -- Vertical permitted movement area
 bigF = 999999 :: Float
