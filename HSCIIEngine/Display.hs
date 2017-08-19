@@ -10,6 +10,14 @@ lineBorder = ('║', ('╔', '╗', '╚', '╝'), '═')
 
 --"\x1b[32m"
 
+-- Terminal Adjustments
+resize (V2 x y)
+  = putStr ("\ESC[8;" ++ (show y') ++ ";" ++ (show x') ++ "t")
+  where
+    -- Taking into account border and input size
+    y' = y + 2 + 1
+    x' = x + 2
+
 -- Terminal output
 
 render :: Object -> IO()
