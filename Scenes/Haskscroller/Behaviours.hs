@@ -10,37 +10,50 @@ import Scenes.Haskscroller.Entity
 
 import GameCommon
 
+playeray = 2.0
+playerax = 2.5
+playervmax = (V2 (playeray * 4) (playeray * 3))
+
 wasdBehaviour :: Behaviour
 wasdBehaviour (eid, entity) _ world actions
-  = if moveValid
-    then (updateW world eid movedPlayer, [])
-    else (world, [])
+  = if dv == (V2 0 0)
+    then (world, [])
+    else (updateW world eid entity', [])
   where
-    movedPlayer = (move 1 disp entity)
-    disp = V2 dx dy
-    dy = axis DOWN UP
-    dx = axis RIGHT LEFT
-    axis forward backward
-      = if backward `elem` actions then -1 else
-        if forward `elem` actions then 1 else 0
-    moveValid
-      = pbox `contains` (getHitbox movedPlayer)
+    dv = V2 dx dy
+    dx = axis RIGHT LEFT playerax
+    dy = axis DOWN  UP   playeray
+    axis forward backward scale
+      = if backward `elem` actions
+          then -scale
+          else if forward `elem` actions
+            then scale
+            else 0
+    v = getVel entity (V2 0 0)
+    v' = clamp (v + dv) (-playervmax) playervmax
+    entity' = setVel entity v'
 
--- TODO properly handle "not enclosed" case
-moveBehaviour :: Behaviour
-moveBehaviour (eid, entity) _ world _
-  = (updateW world eid movedEntity, [])
+playerMoveBehaviour = boundedMoveBehaviour playerArea
+basicMoveBehaviour = boundedMoveBehaviour vmoveArea
+
+-- TODO properly handle bouncing
+boundedMoveBehaviour :: Hitbox -> Behaviour
+boundedMoveBehaviour bounds
+  = moveBehaviour
   where
-    movedEntity = if moveValid
-                  then testMovedEntity
-                  else revMovedEntity
-    testMovedEntity = move fps vel entity
-    vel = getVel entity (V2 0 0)
-    moveValid = heightbox `contains` (getHitbox testMovedEntity)
-    -- "Bounce" off the wall
-    revVel = flipY vel
-    revEntity = setVel entity revVel
-    revMovedEntity = move fps revVel revEntity
+    moveBehaviour (eid, entity) _ world _
+      = (updateW world eid movedEntity, [])
+      where
+        movedEntity = if moveValid
+                        then testMovedEntity
+                        else revMovedEntity
+        testMovedEntity = move fps vel entity
+        vel = getVel entity (V2 0 0)
+        moveValid = vmoveArea `contains` (getHitbox testMovedEntity)
+        -- "Bounce" off the wall
+        revVel = flipY vel
+        revEntity = setVel entity revVel
+        revMovedEntity = move fps revVel revEntity
 
 -- Restores the id!
 despawnBehaviour :: Behaviour
@@ -48,8 +61,7 @@ despawnBehaviour (eid, entity) _ world _
   | offscreen = (world, [eid])
   | otherwise = (world, [])
   where
-    offscreen = despawnboxL `contains` (getHitbox entity) ||
-                despawnboxR `contains` (getHitbox entity)
+    offscreen = not (entityArea `contains` (getHitbox entity))
 
 spawnerBehaviour :: [SpawnInstruction] -> Behaviour -> Behaviour
 spawnerBehaviour [] postBehaviour = postBehaviour

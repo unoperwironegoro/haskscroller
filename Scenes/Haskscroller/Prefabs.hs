@@ -20,19 +20,19 @@ propNone = M.empty
 entPlayer
   = createEntity imgBind
     playerSpawn (0,0,3,1)
-    [wasdBehaviour]
+    [wasdBehaviour, playerMoveBehaviour]
     propNone
 
 entCommentSpawner
   = createEntity imgNull
     nullSpawn (0,0,0,0)
-    [spawnInfComments, moveBehaviour]
+    [spawnInfComments, basicMoveBehaviour]
     propNone
 
 entComment
   = createEntity imgComment
     nullSpawn (0,0,2,1)
-    [despawnBehaviour, moveBehaviour]
+    [despawnBehaviour, basicMoveBehaviour]
     (toProps [propHP 12, propV (V2 (-1) 0)])
 
 ------------------- Spawner Instructions

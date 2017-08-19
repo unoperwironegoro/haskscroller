@@ -25,6 +25,18 @@ flipY (V2 x y) = (V2 x (-y))
 flipX :: (Num a) => Vec2 a -> Vec2 a
 flipX (V2 x y) = (V2 (-x) y)
 
+below :: Ord a => Vec2 a -> Vec2 a -> Bool
+below (V2 x1 y1) (V2 x2 y2) = y1 > y2
+
+above :: Ord a => Vec2 a -> Vec2 a -> Bool
+above v1 v2 = not (below v1 v2)
+
+clamp :: Ord a => Vec2 a -> Vec2 a -> Vec2 a -> Vec2 a
+clamp (V2 x y) (V2 xmin ymin) (V2 xmax ymax)
+  = V2 (clamp' xmin xmax x) (clamp' ymin ymax y)
+  where
+    clamp' mn mx = (max mn) . (min mx)
+
 instance Num a => Num (Vec2 a) where
    (+) = v2op (+)
    (-) = v2op (-)
