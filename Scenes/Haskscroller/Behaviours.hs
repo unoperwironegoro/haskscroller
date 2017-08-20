@@ -14,6 +14,20 @@ playeray = 2.0
 playerax = 2.5
 playervmax = (V2 (playeray * 4) (playeray * 3))
 
+hpBehaviour :: Float -> Behaviour
+hpBehaviour initHP
+  = initHPBehaviour
+  where
+    initHPBehaviour (eid, entity) bid world _
+      = (updateW world eid entity', [])
+      where
+        entity' = updateBehaviour (setHP entity initHP) bid hpBehaviour
+    hpBehaviour (eid, entity) _ world _
+      | dead = (world, [eid])
+      | otherwise = (world, [])
+      where
+        dead = (getHP entity 0) < 0
+
 wasdBehaviour :: Behaviour
 wasdBehaviour (eid, entity) _ world actions
   = if dv == (V2 0 0)
@@ -36,7 +50,6 @@ wasdBehaviour (eid, entity) _ world actions
 playerMoveBehaviour = boundedMoveBehaviour playerArea
 basicMoveBehaviour = boundedMoveBehaviour vmoveArea
 
--- TODO properly handle bouncing
 boundedMoveBehaviour :: Hitbox -> Behaviour
 boundedMoveBehaviour bounds
   = moveBehaviour

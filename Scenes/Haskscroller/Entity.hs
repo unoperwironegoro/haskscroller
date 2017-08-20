@@ -81,3 +81,11 @@ getVel entity defVel
 setVel :: Entity -> V2F -> Entity
 setVel entity vel
   = wProperty entity tagV vel
+
+getHP :: Entity -> Float -> Float
+getHP entity defHP
+  = read (rProperty entity tagHP defHP)
+
+setHP :: Entity -> Float -> Entity
+setHP entity hp
+  = wProperty entity tagHP hp

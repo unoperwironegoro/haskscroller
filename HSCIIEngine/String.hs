@@ -58,13 +58,13 @@ overflow width (w:ws)
   where
     limit = width - (length w)
     (l, rws) = buildLine ws limit
--- Aux
-buildLine :: [String] -> Int -> (String, [String])
-buildLine [] _ = ([], [])
-buildLine (w:ws) limit
-  = if limit' < 0
-    then ([], (w:ws))
-    else ((' ' : (w ++ l)), ls)
-  where
-    limit' = limit - (1 + (length w))
-    (l, ls) = buildLine ws limit'
+
+    buildLine :: [String] -> Int -> (String, [String])
+    buildLine [] _ = ([], [])
+    buildLine (w:ws) lim
+      = if lim' < 0
+        then ([], (w:ws))
+        else ((' ' : (w ++ l)), ls)
+      where
+        lim' = lim - (1 + (length w))
+        (l, ls) = buildLine ws lim'

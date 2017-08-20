@@ -20,7 +20,7 @@ propNone = M.empty
 entPlayer
   = createEntity imgBind
     playerSpawn (0,0,3,1)
-    [wasdBehaviour, playerMoveBehaviour]
+    [wasdBehaviour, playerMoveBehaviour, (hpBehaviour 10)]
     propNone
 
 entCommentSpawner

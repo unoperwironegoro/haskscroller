@@ -8,6 +8,7 @@ import Scenes.Haskscroller.Types
 import Scenes.Haskscroller.World
 import Scenes.Haskscroller.Areas
 import Scenes.Haskscroller.Init
+import Scenes.Haskscroller.HUD
 import qualified Scenes.Haskscroller.Entity as Entity
 
 import Data.Maybe
@@ -46,10 +47,15 @@ draw :: World -> IO()
 draw world
   = do
     wipe (gheight + 3) -- 2 + 1 (border, input line)
-    render (drawOver gCanvas entityObjs)
+    render display
     return ()
   where
+    display = drawOver worldCanvas hudObjs
+    worldCanvas = drawOver gCanvas entityObjs
+    hudObjs = [hpBar, separatorBar]
     entityObjs = [ obj | (Ent _ _ _ obj) <- (getEntities world)]
+
+    hpBar = createHPBar hpBarPos 10 12
 
 keyhdl :: [Char] -> [Action]
 keyhdl
