@@ -4,7 +4,6 @@ import HSCIIEngine.Types
 import Data.Char
 
 -- Used to represent transparency
-alphaTile = [alphaChar]
 alphaChar = chr 30 :: Char
 
 pad :: Char -> Width -> String -> String

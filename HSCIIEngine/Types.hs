@@ -12,9 +12,9 @@ type Y = Float
 type Row = String
 type Image = [[Tile]]
 type Sprite = [[Char]]
-type Tile = String
-type Colour = String
-
+type Tile = (ColourData, Char)
+type ColourData = (Colour, Colour)
+type Colour = Int
 type Object = (V2F, Dimensions, Image)
 
 v2fzero = (V2 0 0) :: V2F

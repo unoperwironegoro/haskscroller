@@ -28,24 +28,14 @@ placeOver offset canvas objs
     paste :: [Tile] -> [Tile] -> [Tile]
     paste _ newTiles = newTiles
 
--- Unused
-drawUnder :: Object -> [Object] -> Object
-drawUnder
-  = (combine (zipWith underlay))
-  where
-    underlay :: Tile -> Tile -> Tile
-    underlay oldTile newTile
-      | oldTile == alphaTile = newTile
-      | otherwise            = oldTile
-
 drawOver :: Object -> [Object] -> Object
 drawOver
   = (combine (zipWith overlay))
   where
     overlay :: Tile -> Tile -> Tile
-    overlay oldTile newTile
-      | newTile == alphaTile = oldTile
-      | otherwise            = newTile
+    overlay oldTile newTile@(_, newCh)
+      | newCh == alphaChar = oldTile
+      | otherwise          = newTile
 
 --TODO optimise multidraws
 combine :: ([Tile] -> [Tile] -> [Tile]) -> (Object -> [Object] -> Object)
@@ -91,7 +81,7 @@ canvasObject dim@(V2 width height) pattern
     image = replicate height rows
     rows = take width ((concat . repeat) pattern)
 
-wrap :: Object -> Border String -> Object
+wrap :: Object -> Border Tile -> Object
 wrap (coords, dim, img) customBorder
   = (coords, dim + (V2 2 2), border customBorder img)
 
