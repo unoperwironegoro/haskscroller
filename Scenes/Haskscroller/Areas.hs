@@ -20,11 +20,11 @@ import GameCommon
 gameArea@(V2 gtl gbr) = fmap (fromIntegral) gdim
 
 visArea@(vtl, vbr@(V2 vwidth vheight))
-  = (v2fzero, gameArea - (V2 0 7)) :: Hitbox
+  = (v2fzero + (V2 1 1), gameArea - (V2 0 7)) :: Hitbox
 
 -- HUD box
 hudArea@(hudtl, hudbr)
-  = (V2 0 vheight, gbr)
+  = (V2 0 (vheight + 1), gbr)
 
 -- Entity spawn area
 spawnArea@(_, sbr)

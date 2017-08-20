@@ -7,12 +7,15 @@ import HSCIIEngine.Types
 
 import GameCommon
 
-objPrompt = toObject (txtformat (gwidth - 6) txtPrompt) (V2 3 15)
+objPrompt
+  = toObject txtImg (V2 3 15)
+  where
+    txtImg = plainCol (txtformat (gwidth - 6) txtPrompt)
 
 calibrate
   = do
     resize gdim
-    render (drawOver gCanvas [objPrompt, objLogo])
+    renderWithBorder (drawOver gCanvas [objPrompt, objLogo]) lineBorder
     ready <- getLine
     hideCursor
     return ()

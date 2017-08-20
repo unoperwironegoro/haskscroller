@@ -42,13 +42,13 @@ containsPos (tlpos, brpos) pos
     (V2 xbounded ybounded) = v2op (&&) boundBelow boundAbove
 
 boxBelow :: Hitbox -> Hitbox -> Bool
-boxBelow (tl1, _) (_, br2) = tl1 `below` br2
+boxBelow (_, br1) (_, br2) = br1 `below` br2
 
 boxAbove :: Hitbox -> Hitbox -> Bool
-boxAbove (_, br1) (tl2, _) = br1 `above` tl2
+boxAbove (tl1, _) (tl2, _) = tl1 `above` tl2
 
 boxLeftOf :: Hitbox -> Hitbox -> Bool
-boxLeftOf (_, br1) (tl2, _) = br1 `leftOf` tl2
+boxLeftOf (tl1, _) (tl2, _) = tl1 `leftOf` tl2
 
 boxRightOf :: Hitbox -> Hitbox -> Bool
-boxRightOf (tl2, _) (_, br2) = tl2 `rightOf` br2
+boxRightOf (_, br1) (_, br2) = br1 `rightOf` br2

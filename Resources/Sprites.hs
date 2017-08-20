@@ -1,17 +1,17 @@
 module Resources.Sprites where
 
+import HSCIIEngine.Display
 import HSCIIEngine.String
 
-imgNull = artformat 0 ""
+imgNull = plainCol $ artformat 0 ""
 
-imgLogo = artformatTransp 17
+imgLogo = colourSprite (colourCode RED) $ artformatTransp 17
   ".__..__....______\n\
   \/ |.| |.../ ____|\n\
   \|_|_|_|..|_/____.\n\
   \(_____().(_____()\n\
   \| |.| |...____/ |\n\
-  \|_|.|_/..|_____/."
-  '.'
+  \|_|.|_/..|_____/."       '.'
 
-imgBind    = artformat 3 ">>="
-imgComment = artformat 2 "--"
+imgBind    = colourSprite (colourCode CYAN) $ artformat 3 ">>="
+imgComment = colourSprite (colourCode WHITE) $ artformat 2 "--"

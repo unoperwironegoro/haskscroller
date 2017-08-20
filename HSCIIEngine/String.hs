@@ -8,10 +8,8 @@ import Data.Char
 -- TODO Allow for colours
 
 -- Used to represent transparency
+alphaStr = [alphaChar]
 alphaChar = chr 30 :: Char
-
-repeatstr :: String -> String
-repeatstr str = [1..] >> str
 
 pad :: Char -> Width -> String -> String
 pad ch w str = take w (str ++ (repeat ch))

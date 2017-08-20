@@ -10,7 +10,10 @@ type X = Float
 type Y = Float
 
 type Row = String
-type Image = [String]
+type Image = [[Tile]]
+type Sprite = [[Char]]
+type Tile = String
+type Colour = String
 
 type Object = (V2F, Dimensions, Image)
 

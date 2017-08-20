@@ -50,7 +50,7 @@ draw world
     render display
     return ()
   where
-    display = drawOver worldCanvas hudObjs
+    display = (drawOver (wrap worldCanvas lineBorder colWhite) hudObjs)
     worldCanvas = drawOver gCanvas entityObjs
     hudObjs = [hpBar, separatorBar]
     entityObjs = [ obj | (Ent _ _ _ obj) <- (getEntities world)]

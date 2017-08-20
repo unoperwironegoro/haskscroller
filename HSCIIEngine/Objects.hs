@@ -2,6 +2,7 @@ module HSCIIEngine.Objects where
 
 import HSCIIEngine.String
 import HSCIIEngine.Types
+import HSCIIEngine.Display
 
 import Data.List
 
@@ -36,9 +37,11 @@ drawOver (coords, cdim, base) ((pos, (V2 w h), img):objs)
     draw (left, mid, right) row
       = reassemble mw left mid' right
       where
-        mid' = zipWith drawTransp mid row
-        drawTransp b i | i == alphaChar = b
-                       | otherwise      = i
+        mid' = zipWith overWrite mid row
+        overWrite :: Tile -> Tile -> Tile
+        overWrite oldTile newTile
+          | oldTile == alphaStr = oldTile
+          | otherwise           = newTile
 
     reassemble :: Int -> [a] -> [a] -> [a] -> [a]
     reassemble maxsize pre mid post
@@ -55,11 +58,15 @@ drawOver (coords, cdim, base) ((pos, (V2 w h), img):objs)
         (pre', middle') = splitAt offset rest'
 
 
-canvasObject :: Dimensions -> String -> Object
+canvasObject :: Dimensions -> [Tile] -> Object
 canvasObject dim@(V2 width height) pattern
   = (v2fzero, dim, image)
   where
     image = replicate height rows
-    rows = take width (repeatstr pattern)
+    rows = take width ((concat . repeat) pattern)
 
-blankCanvas = (flip canvasObject) " "
+wrap :: Object -> Border String -> Colour -> Object
+wrap (coords, dim, img) customBorder colour
+  = (coords, dim + (V2 2 2), borderCol customBorder colour img)
+
+blankCanvas = (flip canvasObject) [" "]
