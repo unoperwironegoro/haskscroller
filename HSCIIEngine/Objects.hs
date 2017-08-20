@@ -20,43 +20,69 @@ move scale (pos, dim, img) disp
   where
     disp' = (fmap (/ scale) disp)
 
-drawOver :: Object -> [Object] -> Object
-drawOver canvas [] = canvas
-drawOver (coords, cdim, base) ((pos, (V2 w h), img):objs)
-  = drawOver (coords, cdim, canvas') objs
+placeOver :: V2F -> Object -> [Object] -> Object
+placeOver offset canvas objs
+  = (combine paste) canvas movedObjs
   where
-    (V2 mw mh) = cdim
-    (V2 x' y') = fmap (round) pos
-    -- Split the canvas, making a burger around the drawn rows
-    (top, midrow, bottom) = splitAt2 y' h base
-    canvas' = reassemble mh top burger bottom
-    -- Split the burger, making another burger around columns
-    burger' = map (splitAt2 x' w) midrow
-    burger = zipWith draw burger' img
+    movedObjs = map (\o -> move 1 o offset) objs
+    paste :: [Tile] -> [Tile] -> [Tile]
+    paste _ newTiles = newTiles
 
-    draw (left, mid, right) row
-      = reassemble mw left mid' right
-      where
-        mid' = zipWith overWrite mid row
-        overWrite :: Tile -> Tile -> Tile
-        overWrite oldTile newTile
-          | oldTile == alphaStr = oldTile
-          | otherwise           = newTile
+-- Unused
+drawUnder :: Object -> [Object] -> Object
+drawUnder
+  = (combine (zipWith underlay))
+  where
+    underlay :: Tile -> Tile -> Tile
+    underlay oldTile newTile
+      | oldTile == alphaTile = newTile
+      | otherwise            = oldTile
 
-    reassemble :: Int -> [a] -> [a] -> [a] -> [a]
-    reassemble maxsize pre mid post
-      = take maxsize (pre ++ mid ++ post)
+drawOver :: Object -> [Object] -> Object
+drawOver
+  = (combine (zipWith overlay))
+  where
+    overlay :: Tile -> Tile -> Tile
+    overlay oldTile newTile
+      | newTile == alphaTile = oldTile
+      | otherwise            = newTile
 
-    splitAt2 :: Int -> Int -> [a] -> ([a], [a], [a])
-    splitAt2 offset len list
-      | offset > 0 = (pre, middle, post)
-      | otherwise  = (pre', middle', post')
-      where
-        (pre, rest) = splitAt offset list
-        (middle, post) = splitAt len rest
-        (rest', post') = splitAt (offset + len) list
-        (pre', middle') = splitAt offset rest'
+--TODO optimise multidraws
+combine :: ([Tile] -> [Tile] -> [Tile]) -> (Object -> [Object] -> Object)
+combine pick = drawf
+  where
+  drawf :: Object -> [Object] -> Object
+  drawf canvas [] = canvas
+  drawf (coords, cdim, base) ((pos, (V2 w h), img):objs)
+    = drawf (coords, cdim, canvas') objs
+    where
+      (V2 mw mh) = cdim
+      (V2 x' y') = fmap (round) pos
+      -- Split the canvas, making a burger around the drawn rows
+      (top, midrow, bottom) = splitAt2 y' h base
+      canvas' = reassemble mh top burger bottom
+      -- Split the burger, making another burger around columns
+      burger' = map (splitAt2 x' w) midrow
+      burger = zipWith draw burger' img
 
+      draw (left, mid, right) row
+        = reassemble mw left mid' right
+        where
+          mid' = pick mid row
+
+      reassemble :: Int -> [a] -> [a] -> [a] -> [a]
+      reassemble maxsize pre mid post
+        = take maxsize (pre ++ mid ++ post)
+
+      splitAt2 :: Int -> Int -> [a] -> ([a], [a], [a])
+      splitAt2 offset len list
+        | offset > 0 = (pre, middle, post)
+        | otherwise  = (pre', middle', post')
+        where
+          (pre, rest) = splitAt offset list
+          (middle, post) = splitAt len rest
+          (rest', post') = splitAt (offset + len) list
+          (pre', middle') = splitAt offset rest'
 
 canvasObject :: Dimensions -> [Tile] -> Object
 canvasObject dim@(V2 width height) pattern
@@ -65,8 +91,11 @@ canvasObject dim@(V2 width height) pattern
     image = replicate height rows
     rows = take width ((concat . repeat) pattern)
 
-wrap :: Object -> Border String -> Colour -> Object
-wrap (coords, dim, img) customBorder colour
-  = (coords, dim + (V2 2 2), borderCol customBorder colour img)
+wrap :: Object -> Border String -> Object
+wrap (coords, dim, img) customBorder
+  = (coords, dim + (V2 2 2), border customBorder img)
 
-blankCanvas = (flip canvasObject) [" "]
+emborder :: Object -> Object -> Object
+emborder canvas bObj = placeOver (V2 1 1) canvas [bObj]
+
+blankCanvas = (flip canvasObject) [(colourChar colWhite ' ')]

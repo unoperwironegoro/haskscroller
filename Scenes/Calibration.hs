@@ -15,7 +15,7 @@ objPrompt
 calibrate
   = do
     resize gdim
-    renderWithBorder (drawOver gCanvas [objPrompt, objLogo]) lineBorder
+    render (emborder gBorder (drawOver gCanvas [objPrompt, objLogo]))
     ready <- getLine
     hideCursor
     return ()

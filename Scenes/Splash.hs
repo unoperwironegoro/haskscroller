@@ -25,7 +25,7 @@ draw :: Splash -> IO()
 draw state
   = do
     wipe (gheight + 3) -- 2 + 1 (border, input line)
-    renderWithBorder (drawOver gCanvas state) lineBorder
+    render (emborder gBorder (drawOver gCanvas state))
     return ()
 
 anyKey :: [Char] -> Bool

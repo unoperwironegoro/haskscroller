@@ -1,14 +1,10 @@
-
 module HSCIIEngine.String where
 
 import HSCIIEngine.Types
-
 import Data.Char
 
--- TODO Allow for colours
-
 -- Used to represent transparency
-alphaStr = [alphaChar]
+alphaTile = [alphaChar]
 alphaChar = chr 30 :: Char
 
 pad :: Char -> Width -> String -> String

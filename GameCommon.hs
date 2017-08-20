@@ -11,5 +11,6 @@ fps = 30 :: Float
 mspf = (1000 / (realToFrac fps)) :: Rational
 
 gCanvas = blankCanvas gdim
+gBorder = wrap gCanvas whiteLineBorder
 
 objLogo = toObject imgLogo (V2 40 3)

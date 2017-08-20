@@ -19,7 +19,7 @@ createHPBar :: V2F -> Float -> Float -> Object
 createHPBar pos hp maxHP
   = toObject img pos
   where
-    img = plainCol [concat icons]
+    img = colourSprite (colourCode2 RED WHITE) [concat icons]
     icons = (replicate hpInt healthIcon) ++ (replicate nhpInt noHealthIcon)
     hpInt = round hp
     nhpInt = round (maxHP - hp)
