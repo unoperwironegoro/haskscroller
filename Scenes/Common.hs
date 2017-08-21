@@ -1,4 +1,4 @@
-module GameCommon where
+module Scenes.Common where
 
 import HSCIIEngine.Display
 import HSCIIEngine.Types
