@@ -17,6 +17,8 @@ type ColourData = (Colour, Colour)
 type Colour = Int
 type Object = (V2F, Dimensions, Image)
 
+---------------------------- Vec2 Operations -------------------------------
+
 v2fzero = (V2 0 0) :: V2F
 
 v2op :: (a -> b -> c) -> Vec2 a -> Vec2 b -> Vec2 c

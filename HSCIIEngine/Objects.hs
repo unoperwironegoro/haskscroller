@@ -20,6 +20,7 @@ move scale (pos, dim, img) disp
   where
     disp' = (fmap (/ scale) disp)
 
+------------------------- Object Image Combination -------------------------
 placeOver :: V2F -> Object -> [Object] -> Object
 placeOver offset canvas objs
   = (combine paste) canvas movedObjs
@@ -85,7 +86,6 @@ wrap :: Object -> Border Tile -> Object
 wrap (coords, dim, img) customBorder
   = (coords, dim + (V2 2 2), border customBorder img)
 
+-- TODO find a better way
 emborder :: Object -> Object -> Object
 emborder canvas bObj = placeOver (V2 1 1) canvas [bObj]
-
-blankCanvas = (flip canvasObject) [(colourChar colWhite ' ')]

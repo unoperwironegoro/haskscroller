@@ -24,14 +24,9 @@ runGame scenes
     return ()
 
 -- Game loop
-gloop :: Rational               -> -- Loop time /ms
-         (w -> IO())            -> -- Display function
-         ([Key] -> a)           -> -- Key interpreter
-         (w -> a -> Maybe w)    -> -- Game logic
-         Maybe w                -> -- Initial world state
-         IO()
 gloop = tgloop (-1)
 
+-- TODO pass around debugging info (framerate)
 tgloop :: Int                    -> -- Max Cycles (< 0 := inf)
           Rational               -> -- Loop time /ms
           (w -> IO())            -> -- Display function
