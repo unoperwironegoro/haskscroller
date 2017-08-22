@@ -14,7 +14,7 @@ separatorBar
 
 hpBarPos = hudtl + (V2 1 1)
 
-cHealth = (RED, WHITE)
+cHealth = (RED, GREY)
 healthIcon = "█"
 noHealthIcon = " "
 

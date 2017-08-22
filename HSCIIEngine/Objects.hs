@@ -6,6 +6,7 @@ import HSCIIEngine.Display
 
 import Data.List
 
+------------------------------ Object Creation -----------------------------
 toObject :: Image -> V2F -> Object
 toObject img coords
   = (coords, dim, img)

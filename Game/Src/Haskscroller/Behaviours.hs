@@ -10,8 +10,8 @@ import Game.Src.Haskscroller.Entity
 
 import Game.Src.Common
 
-playeray = 2.0
-playerax = 2.5
+playeray = 4.0
+playerax = 5.0
 playervmax = (V2 (playeray * 4) (playeray * 3))
 
 hpBehaviour :: Float -> Behaviour
@@ -101,11 +101,10 @@ spawnerBehaviour ((e, d):sis) postBehaviour
       = (updateW world' eid spawner', [])
       where
         world' = world `addEntity` newEntity
-        newEntity = setRelPos spawner e
+        newEntity = setO (setRelPos spawner e) eid
         spawner' = updateBehaviour spawner bid spawnerBehaviour''
         spawnerBehaviour'' = spawnerBehaviour sis postBehaviour
 
 nullBehaviour :: Behaviour
 nullBehaviour (eid, entity) bid world _
   = (updateW world eid (removeBehaviour entity bid), [])
-------------------- Helpers

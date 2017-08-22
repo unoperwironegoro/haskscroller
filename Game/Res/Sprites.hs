@@ -17,5 +17,8 @@ logo = fillSprite Clr.logo $ artformatTransp
 
 -- Entities
 
-eBind    = fillSprite Clr.ally       $ artformat ">>="
-eComment = fillSprite Clr.background $ artformat "--"
+ePlayer     = fillSprite Clr.ally       $ artformat "repeat (-)"
+eComment    = fillSprite Clr.background $ artformat "--"
+eProjectile = fillSprite Clr.ally       $ artformat "-"
+
+eConst      = fillSprite Clr.enemy      $ artformat "const --"

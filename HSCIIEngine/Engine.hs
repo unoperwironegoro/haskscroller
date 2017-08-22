@@ -1,4 +1,10 @@
-module HSCIIEngine.Engine where
+module HSCIIEngine.Engine
+  -- TODO Turn into a package!
+  (runGame, gloop, tgloop,
+   module HSCIIEngine.Objects,
+   module HSCIIEngine.String,
+   module HSCIIEngine.Types,
+   module HSCIIEngine.Display) where
 
 import HSCIIEngine.String
 import HSCIIEngine.Display

@@ -89,3 +89,11 @@ getHP entity defHP
 setHP :: Entity -> Float -> Entity
 setHP entity hp
   = wProperty entity tagHP hp
+
+getO :: Entity -> Int -> Int
+getO entity defO
+  = read (rProperty entity tagO defO)
+
+setO :: Entity -> Int -> Entity
+setO entity oeid
+  = wProperty entity tagO oeid

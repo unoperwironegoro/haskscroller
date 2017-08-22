@@ -9,7 +9,8 @@ findProperty = M.lookup
 updateProperty = M.insert
 
 tagHP = "health"
-tagV = "velocity"
+tagV  = "velocity"
+tagO  = "owner"
 
 rProperty :: (Show a) => Entity -> String -> a -> String
 rProperty (Ent props _ _ _) key vdefault
